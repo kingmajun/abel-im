@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指挥中心-现场指挥即时通讯2.0</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/static/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/static/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="/static/css/plugins/jsTree/style.min.css" rel="stylesheet">
+    <link href="/static/css/animate.min.css" rel="stylesheet">
+    <link href="/static/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight" id="app">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-warning">
+                欢迎您 [[currName]] 当前系统共：<strong id="onlineCount">0</strong>人在线
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="ibox chat-view">
+                <div class="ibox-title">
+                    <small class="pull-right text-muted">最新消息：2015-02-02 18:39:23</small> 聊天窗口
+                </div>
+                <div class="ibox-content">
+                    <div class="panel blank-panel">
+
+                        <div class="panel-heading">
+                            <div class="panel-options">
+                                <ul class="nav nav-tabs">
+                                    <li class="topTab active" data-type="user">
+                                        <a data-toggle="tab" href="#tab-4" aria-expanded="true">
+                                            <i class="fa fa-user-md"></i>
+                                        </a>
+                                    </li>
+                                    <li class="topTab" data-type="group">
+                                        <a data-toggle="tab" href="#tab-5" aria-expanded="false">
+                                            <i class="fa fa-group"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div id="tab-4" class="tab-pane active">
+                                    <div class="row">
+                                        <div class="col-md-12 tabs-container">
+                                            <div class="tabs-left msg">
+                                                <ul class="nav nav-tabs">
+                                                    <li v-for="(item,key) in fiendList" :class="[key==0?'active':'']"
+                                                        @click="checkUser(item.firend_user_id)">
+                                                        <div class="chat-user" data-toggle="tab" :href="'#'+item.id" aria-expanded="true">
+                                                            <img class="chat-avatar" src="/static/img/head-pic.png" alt="">
+                                                            <div class="chat-user-name">
+                                                                <a href="#">[[item.name]]</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <div class="tab-content ">
+                                                    <div id="tab-8" class="tab-pane active">
+                                                        <div class="panel-body">
+                                                            <div class="chat-discussion">
+                                                                <div v-for="li in msgList"
+                                                                     :class="[li.fromUserId==currUserId?'chat-message right':'chat-message left']"
+                                                                     v-if="(li.toUserId+'-'+li.fromUserId)==(checkedUserId+'-'+currUserId)||
+                                                                           (li.toUserId+'-'+li.fromUserId)==(currUserId+'-'+checkedUserId)">
+                                                                    <img class="message-avatar" src="/static/img/default-head.jpg" alt="">
+                                                                    <div class="message">
+                                                                        <a class="message-author"> [[li.name]]</a>
+                                                                        <span class="message-date"> [[li.time]] </span>
+                                                                        <span class="message-content">
+                                                                           [[li.message]]
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="tab-9" class="tab-pane">
+                                                        <div class="panel-body">
+                                                            <div class="chat-discussion">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-5" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-12 tabs-container">
+                                            <div class="tabs-left msg">
+                                                <ul class="nav nav-tabs">
+                                                    <li v-for="(item,key) in myGroupList" :class="[key==0?'active':'']"
+                                                        @click="checkGroup(item.groups_id)">
+                                                        <div class="chat-user" data-toggle="tab" aria-expanded="true">
+                                                            <img class="chat-avatar" src="/img/a1.jpg" alt="">
+                                                            <div class="chat-user-name">
+                                                                <a href="#">[[item.group_name]]</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+                                                </ul>
+                                                <div class="tab-content ">
+                                                    <div  class="tab-pane active">
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="col-md-9">
+                                                                    <div class="chat-discussion">
+                                                                        <div v-for="li in groupMsgList"
+                                                                             :class="[li.from_user_id==currUserId?'chat-message right':'chat-message left']"
+                                                                             v-if="li.groups_id==checkedGroupId">
+                                                                            <img class="message-avatar" src="/static/img/default-head.jpg" alt="">
+                                                                            <div class="message" style="width: 90%;">
+                                                                                <a class="message-author"> [[li.from_nick_name]]</a>
+                                                                                <span class="message-date"> [[li.create_time]] </span>
+                                                                                <span class="message-content">
+                                                                                    [[li.content]]
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="panel panel-default">
+                                                                        <div class="ibox-title">
+                                                                            <h5>群成员(90/100)</h5>
+                                                                        </div>
+                                                                        <div class="ibox-content">
+                                                                            <p>
+                                                                                 张三
+                                                                            </p>
+                                                                            <p>
+                                                                                张三
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox chat-view">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="ibox-content">
+                                <a class="btn btn-success btn-outline">
+                                    <i class="fa fa-upload"> </i> 上传文件
+                                </a>
+                                <a class="btn btn-white btn-bitbucket">
+                                    <i class="fa fa-user-md"></i>
+                                </a>
+                                <a class="btn btn-white btn-bitbucket">
+                                    <i class="fa fa-group"></i>
+                                </a>
+                                <a class="btn btn-white btn-bitbucket">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <a class="btn btn-white btn-bitbucket">
+                                    <i class="fa fa-star"></i> 收藏
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                 <textarea class="form-control message-input" id="message"
+                                           placeholder="输入消息内容，按回车键发送"></textarea>
+                                <span class="input-group-btn">
+                                  <button class="btn btn-primary btn-large-dim" @click="sendMsg" type="button">
+                                      <i class="fa fa-send-o"></i>
+                                  </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/static/js/jquery.min.js?v=2.1.4"></script>
+<script src="/static/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/static/js/ajaxDataController.js"></script>
+<script src="/static/js/vue.min.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el:"#app",
+        delimiters: ['[[', ']]'],
+        data:{
+            currUserId: localStorage.getItem("userId"),//当前登录用户id
+            currName:localStorage.getItem("name"),    //当前登录用户姓名
+            fiendList:[],
+            msgList:[],
+            checkedUserId:"", //选中聊天的用户id
+            myGroupList:[],  //我的群
+            groupMsgList:[], //群消息
+            checkedGroupId:""//选中的群id
+        },
+        created: function () {
+            this.myFriend();
+            this.getMyGroup();
+            this.getGroupMsgList();
+            myAjax().post("/api/getUserMsgByUserId",{userId:this.currUserId},function (data) {
+                 if(data.data.length>0){
+                     $.each(data.data,function (index,item) {
+                         var msg = {};
+                         msg.messId = item.id;
+                         msg.name   = item.name;
+                         msg.time   = item.create_time;
+                         msg.message= item.post_messages;
+                         msg.fromUserId = item.from_user_id;
+                         msg.toUserId   = item.to_user_id;
+                         vue.msgList.push(msg);
+                     });
+                 }
+             })
+        },
+        methods:{
+            myFriend:function(){
+                myAjax().post("/api/getMyFriends",{userId:this.currUserId},function (data) {
+                     vue.fiendList =  data.data;
+                     if(data.data.length>0){
+                        vue.checkedUserId = data.data[0].firend_user_id;
+                     }
+                });
+            },
+            sendMsg:function(){
+                var type = $('.topTab.active').data('type')
+                if (socket.readyState == WebSocket.OPEN){
+                    switch (type) {
+                        case 'user':
+                            var msg = {};
+                            msg.msgType = "2001"
+                            msg.protocolPort = "10003"
+                            msg.toUserId = this.checkedUserId
+                            msg.msg =  $("#message").val();
+                            $("#message").val("")
+                            window.socket.send(JSON.stringify(msg));
+                        case 'group':
+                            var msg = {};
+                            msg.msgType = "2001"
+                            msg.protocolPort = "10002"
+                            msg.groupId = this.checkedGroupId
+                            msg.msg =  $("#message").val();
+                            $("#message").val("")
+                            window.socket.send(JSON.stringify(msg));
+                    }
+                }
+            },
+            checkUser:function (userId) {
+                this.checkedUserId = userId;
+            },
+            getMyGroup:function () {
+                myAjax().post("/api/getMyGroupList",{userId:this.currUserId},function (data) {
+                    vue.myGroupList =  data.data;
+                    if(data.data.length>0){
+                        vue.checkedGroupId = data.data[0].groups_id;
+                    }
+                });
+            },
+            checkGroup:function(groupId){
+                this.checkedGroupId = groupId;
+            },
+            getGroupMsgList:function () {
+                myAjax().post("/api/GetGroupMsgList",{userId:this.currUserId},function (data) {
+                    console.log(data)
+                    vue.groupMsgList =  data.data;
+                });
+            }
+        }
+    });
+
+    window.socket = new WebSocket("ws://localhost:8080/ws?userId="+vue.currUserId);
+    window.socket.onmessage = function (event) {
+        var data = eval("(" + event.data + ")");
+        console.log(data)
+        switch (data.protocolPort) {
+            case 10004:
+            case 10001:
+                $("#onlineCount").text(data.extendData.userCount)
+                break;
+            case 10003:
+                broadcastInvake(data)
+                break;
+            case 10002:
+                var msg = {};
+                msg.id = data.extendData.messageId;
+                msg.from_nick_name   = data.extendData.name;
+                msg.time   = data.date;
+                msg.content= data.extendData.msg;
+                msg.from_user_id = data.extendData.sendUserId;
+                msg.groups_id   = data.extendData.groupId;
+                vue.groupMsgList.push(msg);
+                console.log(vue.groupMsgList)
+                break;
+        }
+    }
+    window.socket.onclose = function (event) {
+        alert("连接关闭!!!");
+        window.socket = null;
+        window.isAuth = false;
+        window.userCount = 0;
+        window.socket.send("{'code':9999999,'mess':'关闭'}");
+    };
+    function send(auth, mess) {
+        if (!window.socket) {
+            return;
+        }
+        if (socket.readyState == WebSocket.OPEN || auth) {
+            window.socket.send(mess);
+        } else {
+            alert("连接没有成功，请重新登录");
+        }
+    }
+
+
+    //收到的消息
+    function broadcastInvake(data) {
+        var msg = {};
+        msg.messId = data.extendData.messageId;
+        msg.name   = data.extendData.name;
+        msg.time   = data.date;
+        msg.message= data.extendData.msg;
+        msg.fromUserId = data.extendData.sendUserId;
+        msg.toUserId   = data.extendData.toUserId;
+        vue.msgList.push(msg);
+    }
+    function msgHandle(data){
+        switch (data.extend.code) {
+            case 20011: // user count
+                $("#onlineCount").text(data.extend.mess)
+                break;
+            case 20012: // auth
+                break;
+            case 20013: // system message
+                break;
+        }
+    }
+    
+
+</script>
+</html>

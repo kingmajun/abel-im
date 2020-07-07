@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Mirrored from www.zi-han.net/theme/hplus/login_v2.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:19:49 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>阿贝尔</title>
+    <meta name="keywords" content="阿贝尔 IM">
+    <meta name="description" content="阿贝尔 IM基于GO语言开发的即时通讯">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="/static/css/animate.min.css" rel="stylesheet">
+    <link href="/static/css/style.min.css" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link href="/static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+     <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <script>
+        if (window.top!==window.self) {
+            window.top.location=window.location
+        };
+
+    </script>
+
+</head>
+
+<body class="gray-bg">
+<div class="middle-box text-center loginscreen   animated fadeInDown">
+    <div style="color: #000000;" id="app">
+
+        <h3 >欢迎注册阿贝尔IM</h3>
+        <form class="m-t" role="form" action="#" id="dataForm">
+            <div class="form-group">
+                <input type="text" v-model="params.username" name="username" class="form-control" placeholder="请输入手机号码" required="">
+            </div>
+            <div class="form-group">
+                <input type="text" v-model="params.name" name="name" class="form-control" placeholder="请输入姓名" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" v-model="params.password" name="password" class="form-control" placeholder="请输入密码" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" v-model="params.confirmPwd" name="confirmPwd" placeholder="请再次输入密码" required="">
+            </div>
+            <button type="button" @click="save" class="btn btn-primary block full-width m-b">注 册</button>
+            <p class="text-muted text-center">
+                <small>已经有账户了？</small><a href="login.html">点此登录</a>
+            </p>
+        </form>
+    </div>
+</div>
+</body>
+<script src="/static/js/jquery.min.js?v=2.1.4"></script>
+<script src="/static/js/ajaxDataController.js"></script>
+<script src="/static/js/vue.min.js"></script>
+<script src="/static/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="/static/js/validator.min.js"></script>
+<script>
+    var vue = new Vue({
+        el:"#app",
+        data:{
+           params:{}
+        },
+        created: function () {
+
+        },
+        methods:{
+            save:function(){
+                if(validator.validate().errors.length==0){
+                    myAjax().post("/api/saveRegister",this.params,function (data) {
+                        if(data.code==200){
+                            swal({title:"提示",text:data.msg,type: "success"},function () {
+                                window.location.href="/";
+                            })
+                        }else{
+                            swal({title:"提示",text:data.msg,type: "warning"})
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+    var validator = new Validator('dataForm',[
+        {
+            name:"username",
+            display:"手机号码不能为空！|手机号码格式不正确！",
+            rules: 'required|is_phone'
+        },
+        {
+            name:"name",
+            display:"姓名不能为空！",
+            rules: 'required'
+        },
+        {
+            name:"password",
+            display:"密码不能为空！",
+            rules: 'required'
+        }
+
+    ]);
+</script>
+</html>
