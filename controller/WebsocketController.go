@@ -11,9 +11,10 @@ const (
 	// 最大的消息大小
 	maxMessageSize = 8192
 )
+
 var Manager = service.NewClientManager() // 管理者
 //websocket 连接
-func Run(w http.ResponseWriter, r *http.Request)  {
+func Run(w http.ResponseWriter, r *http.Request) {
 	conn, err := (&websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
@@ -32,8 +33,8 @@ func Run(w http.ResponseWriter, r *http.Request)  {
 	conn.SetReadLimit(maxMessageSize)
 	//
 	userId := r.FormValue("userId")
-	userInfo,_ := dbConn.GetOne("select * from im_user where user_id=?",userId)
-	clientSocket := service.NewClient(userId,userInfo, conn)
+	userInfo, _ := dbConn.GetOne("select * from im_user where user_id=?", userId)
+	clientSocket := service.NewClient(userId, userInfo, conn)
 	//读取客户端消息
 	clientSocket.Read()
 	// 用户连接事件
@@ -43,8 +44,4 @@ func Run(w http.ResponseWriter, r *http.Request)  {
 
 	go service.SaveMsg()
 
-
-
 }
-
-
