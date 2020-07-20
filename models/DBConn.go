@@ -9,9 +9,10 @@ var (
 	db  *sql.DB
 	err error
 )
+
 //cwei@~^ha3
 func init() {
-	db, err = sql.Open("mysql","root:root@tcp(127.0.0.1:3306)/im?charset=utf8")
+	db, err = sql.Open("mysql", "root:root@tcp(10.10.68.182:3306)/im?charset=utf8")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -26,7 +27,6 @@ func init() {
 type DBConn struct {
 	db *sql.DB
 }
-
 
 // 获取一行记录
 func (this *DBConn) GetOne(sql string, args ...interface{}) (dbRow, error) {

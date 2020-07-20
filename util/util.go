@@ -9,7 +9,6 @@ func GenGroupKey(systemId, groupName string) string {
 	return systemId + ":" + groupName
 }
 
-
 // 生成32位MD5
 func MD5(text string) string {
 	ctx := md5.New()
