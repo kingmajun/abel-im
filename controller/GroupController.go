@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"abel-im/models"
 	"abel-im/util"
 	"net/http"
 )
@@ -9,7 +10,9 @@ import (
 func GetMyGroupList(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	userId := r.PostForm.Get("userId")
-	rows, _ := dbConn.GetAll("select  a.groups_id,b.group_name from  im_groups_to_user a,im_user_groups b where a.groups_id=b.id and a.user_id=?", userId)
+	params := map[string]interface{}{"userId":userId}
+	sql,sqlParams,_ :=models.ReadSqlParams("mapper.group.getMyGroupsByUserId",params)
+	rows, _ := dbConn.GetAll(sql, sqlParams...)
 	util.OK(w, rows, "")
 }
 
@@ -17,6 +20,8 @@ func GetMyGroupList(w http.ResponseWriter, r *http.Request) {
 func GetGroupMsgList(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	userId := r.PostForm.Get("userId")
-	rows, _ := dbConn.GetAll("select a.* from im_groups_messages a,im_groups_to_user b where a.groups_id=b.groups_id and b.user_id=? ORDER BY a.create_time", userId)
+	params := map[string]interface{}{"userId":userId}
+	sql,sqlParams,_ :=models.ReadSqlParams("mapper.message.getMyGroupMsgsByUserId",params)
+	rows, _ := dbConn.GetAll(sql, sqlParams...)
 	util.OK(w, rows, "")
 }

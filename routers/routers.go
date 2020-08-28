@@ -18,7 +18,8 @@ func init()  {
 	http.HandleFunc("/api/getMyGroupList",controller.GetMyGroupList)
 	http.HandleFunc("/api/GetGroupMsgList",controller.GetGroupMsgList)
 
-	http.HandleFunc("/SendMsg",controller.SendMsg)
+
+	http.HandleFunc("/send2client",controller.Send2ClientMsg)
 	http.HandleFunc("/ws",controller.Run)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 }

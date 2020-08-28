@@ -41,7 +41,6 @@ func Run(w http.ResponseWriter, r *http.Request) {
 	Manager.Connect <- clientSocket
 	go Manager.Start()
 	go Manager.WriteMessage()
-
 	go service.SaveMsg()
 
 }

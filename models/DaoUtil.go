@@ -3,12 +3,14 @@ package models
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	orm "github.com/kingmajun/king-orm"
 )
 
 
 type dbRow map[string]interface{}
 
-
+//存储所有sqlmapper
+var SqlMapper = new(orm.Osm)
 
 func scanRow(rows *sql.Rows) (dbRow, error) {
 	columns, _ := rows.Columns()
@@ -35,7 +37,12 @@ func scanRow(rows *sql.Rows) (dbRow, error) {
 			r[v] = vals[i]
 		}
 	}
-
 	return r, nil
+}
 
+//
+func ReadSqlParams(sqlId string,params map[string]interface{}) (sql string, sqlParams []interface{}, err error)  {
+	m,_ := SqlMapper.GetMethodSql(sqlId)
+	sql,sqlParams,err = orm.GetExecSqlInfo(m.Sql,params)
+	return
 }

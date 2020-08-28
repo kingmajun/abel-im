@@ -1,5 +1,7 @@
 package configs
 
+import "sync"
+
 //系统监听端口
 var Port string
 
@@ -10,4 +12,7 @@ var LocalIP string
 var IsCluster bool
 
 //etcd服务
-var EtcdEndpoints []string
+var EtcdEndpoints   []string
+// 注册到etcd客户端
+var EtcdClientList     map[string]string
+var EtcdClientListLock sync.RWMutex

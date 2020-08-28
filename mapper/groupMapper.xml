@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sqlMapper namespace="mapper.group">
+    <!--查询我的群 -->
+    <select  id="getMyGroupsByUserId">
+        select  a.groups_id,b.group_name from  im_groups_to_user a,im_user_groups b where a.groups_id=b.id and a.user_id=#{userId}
+    </select>
+</sqlMapper>

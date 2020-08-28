@@ -1,0 +1,25 @@
+syntax = "proto3";  // 协议为proto3
+
+option go_package = "grpc/pb";
+
+//执行脚本   protoc --go_out=plugins=grpc:../ ./sendRpcMsg.proto
+
+//一对一发送消息
+message Send2client {
+    string sendUserId = 1; //发送人
+    string name       = 2; //发送人姓名
+    string toUserId   = 3; //消息接收人
+    int32  msgtype    = 4; //消息类型
+    string msg        = 5; //消息内容
+}
+// 返回响应
+message Send2clientReply {
+    int32 httpCode = 1;  //返回消息状态
+    string response = 2; //返回内容
+}
+
+// 定义服务,可定义多个服务,每个服务可多个接口
+service GoSpider {
+    // rpc请求 请求的函数 (发送请求参数) returns (返回响应的参数)
+    rpc GetSend2clientResponse (Send2client) returns (Send2clientReply);
+}

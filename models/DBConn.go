@@ -12,7 +12,7 @@ var (
 
 //cwei@~^ha3
 func init() {
-	db, err = sql.Open("mysql", "root:root@tcp(10.10.68.182:3306)/im?charset=utf8")
+	db, err = sql.Open("mysql", "root:root@tcp(localhost:3306)/im?charset=utf8")
 	if err != nil {
 		panic(err.Error())
 	}

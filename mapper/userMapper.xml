@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sqlMapper namespace="mapper.user">
+    <select  id="getUserByUsername">
+        select * from im_user where username=#{username}
+    </select>
+</sqlMapper>

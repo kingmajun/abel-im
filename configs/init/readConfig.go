@@ -21,6 +21,7 @@ func InitConfig() (err error) {
 	}
 
 	path, _ := os.Getwd()
+	println(path)
 	if strings.Contains(path, "servers") {
 		path += "/.."
 	} else {
@@ -31,6 +32,7 @@ func InitConfig() (err error) {
 			}
 		}
 	}
+	println(path)
 	ConfigData, err = config.NewConfig("ini", path+"/configs/config.ini")
 	if err != nil {
 		return err

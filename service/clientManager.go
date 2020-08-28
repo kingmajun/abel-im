@@ -153,7 +153,7 @@ func (manager *ClientManager) SendMessage2LocalGroup(messageId, sendUserId, grou
 			for _, clientId := range clientIds {
 				if _, err := Manager.GetByClientId(clientId); err == nil {
 					//添加到本地
-					SendMessage2LocalClient(messageId, clientId, sendUserId, code, msg, data)
+					//SendMessage2LocalClient(messageId, clientId, sendUserId, code, msg, data)
 				} else {
 					//删除分组
 					manager.delGroupClient(util.GenGroupKey("", groupName), clientId)
@@ -171,15 +171,18 @@ func (manager *ClientManager) GetGroupClientList(groupKey string) []string {
 }
 
 //通过本服务器发送信息
-func SendMessage2LocalClient(messageId, clientId string, sendUserId string, code int, msg string, data *string) {
+func SendMessage2LocalClient(sendUserId string, toUserId string,name string, msgtype string, msg string) {
 	log.Println("发送到通道")
-
 	var extendData = make(map[string]interface{})
 	extendData["msg"] = msg
-	extendData["msgtype"] = 2001
-	extendData["sendUserId"] = "1"
-	extendData["toUserId"] = "2"
-	extendData["name"] = "马俊"
-	ToClientChan <- clientInfo{ClientId: "1", Msg: "单聊消息", ProtocolPort: 10003, ExtendData: extendData}
+	extendData["msgtype"] = msgtype
+	extendData["sendUserId"] = sendUserId
+	extendData["toUserId"] = toUserId
+	extendData["name"] = name
+
+	//go Manager.WriteMessage() //todo 临时解决，当所有人都没登录情况下，发送消息导致管道消息没有被消费，从而导致线程阻塞问题
+	//go SaveMsg() //todo 临时解决
+	ToClientChan <- clientInfo{ClientId: sendUserId, Msg: "单聊消息", ProtocolPort: util.SingleMsgProtocol, ExtendData: extendData}
+
 	return
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sqlMapper namespace="mapper.message">
+    <!--查询我的群消息 -->
+    <select  id="getMyGroupMsgsByUserId">
+        select a.* from im_groups_messages a,im_groups_to_user b where a.groups_id=b.groups_id and b.user_id=#{userId} ORDER BY a.create_time
+    </select>
+    <!-- 获取我收到和我发出的消息-->
+    <select id="getUserMsgByUserId">
+        SELECT i.id,i.post_messages,i.from_user_id,i.to_user_id,i.status,i.create_time,
+        (select name from im_user where user_id=i.from_user_id)name
+        FROM im_messages i where ( i.from_user_id=#{userId} or i.to_user_id=#{userId}) ORDER BY  i.create_time
+    </select>
+</sqlMapper>

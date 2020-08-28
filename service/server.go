@@ -83,6 +83,7 @@ func (manager *ClientManager) Render(conn *websocket.Conn, protocolPort int, des
 
 //监听并发送给客户端信息
 func (manager *ClientManager) WriteMessage() {
+	fmt.Print("================")
 	for {
 		clientInfo := <-ToClientChan
 		switch clientInfo.ProtocolPort {
@@ -100,6 +101,10 @@ func (manager *ClientManager) WriteMessage() {
 				}
 			} else {
 				log.Println(" -> ", "当前在线用户：", len(manager.ClientIdMap), "。没有找到该客户端：", clientInfo.ClientId)
+				//离线发送
+				clientInfo.ExtendData["messageId"] = models.GetStringId()
+				retData := RetData{ProtocolPort: clientInfo.ProtocolPort, Desc: clientInfo.Msg, Status: 200, Date: time.Now().Format("2006-01-02 15:04:05"), ExtendData: clientInfo.ExtendData}
+				SendMsg <- retData
 			}
 		default:
 			log.Println("消息类型无法处理  -> ", clientInfo)
@@ -111,10 +116,17 @@ func (manager *ClientManager) WriteMessage() {
 //报错聊天记录
 func SaveMsg() {
 	for {
-		msg := <-SendMsg
+		select {
+		case msg := <-SendMsg:
+			if msg.ProtocolPort == util.SingleMsgProtocol {
+				dbConn.GetAll("INSERT INTO im_messages(id,post_messages,from_user_id,to_user_id,status,create_time) values(?,?,?,?,?,?)",
+					msg.ExtendData["messageId"], msg.ExtendData["msg"], msg.ExtendData["sendUserId"], msg.ExtendData["toUserId"], 0, msg.Date)
+			}
+		}
+		/*msg := <-SendMsg
 		if msg.ProtocolPort == util.SingleMsgProtocol {
 			dbConn.GetAll("INSERT INTO im_messages(id,post_messages,from_user_id,to_user_id,status,create_time) values(?,?,?,?,?,?)",
 				msg.ExtendData["messageId"], msg.ExtendData["msg"], msg.ExtendData["sendUserId"], msg.ExtendData["toUserId"], 0, msg.Date)
-		}
+		}*/
 	}
 }
