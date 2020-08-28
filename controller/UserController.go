@@ -11,7 +11,9 @@ import (
 func GetMyFriends(writer http.ResponseWriter, request *http.Request) {
 	request.ParseForm()
 	userId := request.PostForm.Get("userId")
-	rs, _ := dbConn.GetAll("select * from im_friends where user_id=?", userId)
+	params := map[string]interface{}{"userId":userId}
+	sql,sqlParams,_ :=models.ReadSqlParams("mapper.friends.getMyFriends",params)
+	rs, _ := dbConn.GetAll(sql, sqlParams...)
 	util.OK(writer, rs, "")
 }
 
@@ -28,7 +30,9 @@ func SaveRegister(writer http.ResponseWriter, request *http.Request) {
 	password := request.PostForm.Get("password")
 	name := request.PostForm.Get("name")
 	confirmPwd := request.PostForm.Get("confirmPwd")
-	rs, _ := dbConn.GetAll("select * from im_user where username=?", username)
+	params := map[string]interface{}{"username":username}
+	sql,sqlParams,_ :=models.ReadSqlParams("mapper.user.getUserByUsername",params)
+	rs, _ := dbConn.GetAll(sql, sqlParams...)
 	if len(rs) > 0 {
 		util.Fail(writer, "手机号码已存在")
 	} else {

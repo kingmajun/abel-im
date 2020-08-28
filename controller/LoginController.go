@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"abel-im/models"
 	"abel-im/util"
 	"html/template"
 	"net/http"
@@ -19,8 +18,7 @@ func UserLogin(writer http.ResponseWriter, request *http.Request) {
 	username := request.PostForm.Get("username")
 	password := request.PostForm.Get("password")
 	params := map[string]interface{}{"username":username}
-	sql,sqlParams,_ :=models.ReadSqlParams("mapper.user.getUserByUsername",params)
-	rs, _ := dbConn.GetOne(sql, sqlParams...)
+	rs, _ := dbConn.ExecOneSqlMapper("mapper.user.getUserByUsername",params)
 	if len(rs) > 0 {
 		if util.MD5(password) != rs["password"] {
 			util.Fail(writer, "密码错误")

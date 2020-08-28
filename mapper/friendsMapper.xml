@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sqlMapper namespace="mapper.friends">
+    <!--查询我的好友 -->
+    <select  id="getMyFriends">
+        select * from im_friends where user_id=#{userId}
+    </select>
+</sqlMapper>

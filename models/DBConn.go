@@ -56,5 +56,36 @@ func (this *DBConn) GetAll(sql string, args ...interface{}) ([]dbRow, error) {
 		result = append(result, r)
 	}
 	return result, nil
+}
 
+//查询一条记录
+func (d *DBConn) ExecOneSqlMapper(id string,params map[string]interface{})(dbRow, error) {
+	sql,sqlParams,_ := ReadSqlParams(id,params)
+	rows, err := db.Query(sql, sqlParams...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	rows.Next()
+	result, err := scanRow(rows)
+	return result, err
+}
+
+//查询多条
+func (d *DBConn) ExecAllSqlMapper(id string, params map[string]interface{}) ([]dbRow, error) {
+	sql,sqlParams,_ := ReadSqlParams(id,params)
+	rows, err := db.Query(sql, sqlParams...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	result := make([]dbRow, 0)
+	for rows.Next() {
+		r, err := scanRow(rows)
+		if err != nil {
+			continue
+		}
+		result = append(result, r)
+	}
+	return result, nil
 }
