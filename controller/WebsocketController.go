@@ -33,7 +33,8 @@ func Run(w http.ResponseWriter, r *http.Request) {
 	conn.SetReadLimit(maxMessageSize)
 	//
 	userId := r.FormValue("userId")
-	userInfo, _ := dbConn.GetOne("select * from im_user where user_id=?", userId)
+	params := map[string]interface{}{"userId":userId}
+	userInfo, _ := dbConn.ExecOneSqlMapper("mapper.user.getUserByUserId",params)
 	clientSocket := service.NewClient(userId, userInfo, conn)
 	//读取客户端消息
 	clientSocket.Read()

@@ -3,4 +3,7 @@
     <select  id="getUserByUsername">
         select * from im_user where username=#{username}
     </select>
+    <select  id="getUserByUserId">
+        select * from im_user where user_id=#{userId}
+    </select>
 </sqlMapper>

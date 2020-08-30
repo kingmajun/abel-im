@@ -31,8 +31,7 @@ func SaveRegister(writer http.ResponseWriter, request *http.Request) {
 	name := request.PostForm.Get("name")
 	confirmPwd := request.PostForm.Get("confirmPwd")
 	params := map[string]interface{}{"username":username}
-	sql,sqlParams,_ :=models.ReadSqlParams("mapper.user.getUserByUsername",params)
-	rs, _ := dbConn.GetAll(sql, sqlParams...)
+ 	rs, _ := dbConn.ExecAllSqlMapper("mapper.user.getUserByUsername", params)
 	if len(rs) > 0 {
 		util.Fail(writer, "手机号码已存在")
 	} else {
