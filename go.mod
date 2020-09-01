@@ -24,7 +24,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.14.5 // indirect
 	github.com/jonboulle/clockwork v0.2.0 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
-	github.com/kingmajun/king-orm v0.0.0-20200828055315-b408cca0129a
+	github.com/kingmajun/king-orm v0.0.0-20200901062423-1a1edff7dbe7
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/prometheus/client_golang v1.5.1 // indirect
 	github.com/prometheus/common v0.10.0 // indirect

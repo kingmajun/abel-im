@@ -10,7 +10,7 @@ import (
 type dbRow map[string]interface{}
 
 //存储所有sqlmapper
-var SqlMapper = new(orm.Osm)
+var SqlMapper = new(orm.SqlMapping)
 
 func scanRow(rows *sql.Rows) (dbRow, error) {
 	columns, _ := rows.Columns()
