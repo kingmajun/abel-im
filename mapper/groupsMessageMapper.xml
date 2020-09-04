@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sqlMapper namespace="mapper.groupsMessage">
+    <insert  id="addGroupsMsg">
+        insert into im_groups_messages(id,groups_id,content,from_user_id,from_nick_name,create_time) values
+        (#{id},#{groupsId},#{content},#{fromUserId},#{fromNickName},#{createTime})
+    </insert>
+</sqlMapper>

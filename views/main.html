@@ -31,13 +31,13 @@
 
                         <div class="panel-heading">
                             <div class="panel-options">
-                                <ul class="nav nav-tabs">
-                                    <li class="topTab active" data-type="user">
+                                <ul class="nav nav-tabs top-tabs">
+                                    <li class="topTab active"  data-type="user">
                                         <a data-toggle="tab" href="#tab-4" aria-expanded="true">
                                             <i class="fa fa-user-md"></i>
                                         </a>
                                     </li>
-                                    <li class="topTab" data-type="group">
+                                    <li class="topTab"   data-type="group">
                                         <a data-toggle="tab" href="#tab-5" aria-expanded="false">
                                             <i class="fa fa-group"></i>
                                         </a>
@@ -168,20 +168,17 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="ibox-content">
-                                <a class="btn btn-success btn-outline">
-                                    <i class="fa fa-upload"> </i> 上传文件
-                                </a>
-                                <a class="btn btn-white btn-bitbucket">
+                                <a class="btn btn-success btn-outline switch" data-toggle="tab" href="#tab-4">
                                     <i class="fa fa-user-md"></i>
                                 </a>
-                                <a class="btn btn-white btn-bitbucket">
+                                <a class="btn btn-white btn-bitbucket switch" data-toggle="tab" href="#tab-5">
                                     <i class="fa fa-group"></i>
                                 </a>
                                 <a class="btn btn-white btn-bitbucket">
-                                    <i class="fa fa-wrench"></i>
+                                    <i class="fa fa-folder"> </i> 发送文件
                                 </a>
                                 <a class="btn btn-white btn-bitbucket">
-                                    <i class="fa fa-star"></i> 收藏
+                                    <i class="fa fa-commenting-o"></i> 历史记录
                                 </a>
                             </div>
                         </div>
@@ -270,6 +267,7 @@
                             msg.groupId = this.checkedGroupId
                             msg.msg =  $("#message").val();
                             $("#message").val("")
+                            console.log(msg)
                             window.socket.send(JSON.stringify(msg));
                     }
                 }
@@ -363,7 +361,8 @@
                 break;
         }
     }
-    
+
+
 
 </script>
 </html>

@@ -77,13 +77,13 @@ func (manager *ClientManager) Render(conn *websocket.Conn, protocolPort int, des
 				cn.Socket.WriteJSON(retData)
 			}
 		}
-	}
+		SendMsg <- retData
+ 	}
 	return nil
 }
 
 //监听并发送给客户端信息
 func (manager *ClientManager) WriteMessage() {
-	fmt.Print("================")
 	for {
 		clientInfo := <-ToClientChan
 		switch clientInfo.ProtocolPort {
@@ -113,7 +113,7 @@ func (manager *ClientManager) WriteMessage() {
 	}
 }
 
-//报错聊天记录
+//保存聊天记录
 func SaveMsg() {
 	for {
 		select {
@@ -121,12 +121,19 @@ func SaveMsg() {
 			if msg.ProtocolPort == util.SingleMsgProtocol {
 				dbConn.GetAll("INSERT INTO im_messages(id,post_messages,from_user_id,to_user_id,status,create_time) values(?,?,?,?,?,?)",
 					msg.ExtendData["messageId"], msg.ExtendData["msg"], msg.ExtendData["sendUserId"], msg.ExtendData["toUserId"], 0, msg.Date)
+			}else if msg.ProtocolPort == util.GroupMsgProtocol  {
+				params := map[string]interface{}{
+					"id":msg.ExtendData["messageId"],
+					"groupsId":msg.ExtendData["groupId"],
+					"content":msg.ExtendData["msg"],
+					"fromUserId":msg.ExtendData["sendUserId"],
+					"fromNickName":msg.ExtendData["name"],
+					"createTime":msg.Date,
+				}
+				sql,sqlParams,_ :=models.ReadSqlParams("mapper.groupsMessage.addGroupsMsg",params)
+				dbConn.GetAll(sql, sqlParams...)
+
 			}
 		}
-		/*msg := <-SendMsg
-		if msg.ProtocolPort == util.SingleMsgProtocol {
-			dbConn.GetAll("INSERT INTO im_messages(id,post_messages,from_user_id,to_user_id,status,create_time) values(?,?,?,?,?,?)",
-				msg.ExtendData["messageId"], msg.ExtendData["msg"], msg.ExtendData["sendUserId"], msg.ExtendData["toUserId"], 0, msg.Date)
-		}*/
 	}
 }
